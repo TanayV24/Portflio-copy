@@ -28,10 +28,10 @@ import {
   Rocket,
   Github,
 } from "lucide-react";
+import { motion, Variants } from "framer-motion";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import SectionHeading from "./SectionHeading";
 
-// project images
 import aiLeadImg from "@/assets/projects/ai-lead-generator.jpg";
 import careerImg from "@/assets/projects/career-guidance.jpg";
 import ecommerceImg from "@/assets/projects/ecommerce-shoe.jpg";
@@ -209,105 +209,224 @@ const minorProjects: Project[] = [
   },
 ];
 
-const ProjectCard = ({ project, index }: { project: Project; index: number }) => {
+// Framer Motion variants
+const sectionVariants: Variants = {
+  hidden: { opacity: 0, y: 24 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, ease: "easeOut" },
+  },
+};
+
+const staggerContainer: Variants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.15,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const cardVariant: Variants = {
+  hidden: { opacity: 0, y: 32, scale: 0.96 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { type: "spring", stiffness: 140, damping: 18 },
+  },
+};
+
+const Projects = () => {
+  return (
+    <motion.section
+      id="projects"
+      className="py-24 px-6 md:px-12 lg:px-20 relative overflow-hidden"
+      variants={sectionVariants}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: "-120px" }}
+    >
+      {/* animated background blobs */}
+      <motion.div
+        className="pointer-events-none absolute -top-24 right-0 w-80 h-80 rounded-full bg-primary/10 blur-3xl"
+        animate={{ y: [0, -18, 0] }}
+        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.div
+        className="pointer-events-none absolute bottom-0 -left-10 w-96 h-96 rounded-full bg-accent/10 blur-3xl"
+        animate={{ y: [0, 22, 0] }}
+        transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
+      />
+
+      <div className="container max-w-6xl mx-auto relative z-10">
+        <SectionHeading
+          icon={Rocket}
+         /* subtitle="Major case studies and supporting builds that highlight full‑stack, AI/ML and embedded work."*/
+        >
+          Projects
+        </SectionHeading>
+
+        {/* Major Projects */}
+        <motion.div
+          className="mb-20 space-y-10"
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+        >
+          <div className="flex items-center justify-between gap-4">
+            <h3 className="text-2xl md:text-3xl font-semibold">
+              Major Projects
+            </h3>
+            {/*<p className="text-xs md:text-sm text-muted-foreground max-w-sm text-right">
+              High‑impact projects with end‑to‑end ownership, from problem
+              framing to deployment and iteration.
+            </p>*/}
+          </div>
+
+          {majorProjects.map((project, index) => (
+            <MajorProjectRow key={project.title} project={project} index={index} />
+          ))}
+        </motion.div>
+
+        {/* Minor Projects */}
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-80px" }}
+        >
+          <div className="flex items-center justify-between gap-4 mb-6">
+            <h3 className="text-2xl md:text-3xl font-semibold">Minor Projects</h3>
+            {/*<p className="text-xs md:text-sm text-muted-foreground max-w-xs text-right">
+              Smaller tools, experiments and client work that complement the
+              major projects.
+            </p>*/}
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {minorProjects.map((project, index) => (
+              <MinorProjectCard
+                key={project.title}
+                project={project}
+                index={index}
+              />
+            ))}
+          </div>
+        </motion.div>
+      </div>
+    </motion.section>
+  );
+};
+
+const MajorProjectRow = ({
+  project,
+  index,
+}: {
+  project: Project;
+  index: number;
+}) => {
   const Icon = project.icon;
+  const isEven = index % 2 === 0;
   const { ref, isVisible } = useScrollAnimation();
 
   return (
     <Dialog>
-      <div ref={ref}>
-        <Card
-          className={`group relative overflow-hidden border-border bg-card/50 dark:bg-card/30
-            transition-transform transition-shadow duration-300
-            hover:-translate-y-1 hover:shadow-2xl hover:shadow-primary/10 ${
-              isVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-8"
-            }`}
-          style={{ transitionDelay: `${index * 150}ms` }}
-        >
-          <CardHeader className="relative">
-            {/* Thumbnail with image + glass effect */}
-            <div className="relative w-full h-40 md:h-48 rounded-2xl bg-gradient-to-br from-primary/15 via-transparent to-primary/25 p-[1px]">
-              <div className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl bg-primary/20" />
-              <div
-                className="relative flex h-full w-full items-center justify-center rounded-2xl
-                  overflow-hidden bg-card-light/40 dark:bg-muted/40
-                  backdrop-blur-md border border-border/60
-                  shadow-sm transition-all duration-500
-                  group-hover:shadow-xl group-hover:-translate-y-0.5 group-hover:scale-[1.02]"
-              >
-                {project.image && (
-                  <img
-                    src={project.image}
-                    alt={project.title}
-                    className="absolute inset-0 h-full w-full object-cover opacity-30 group-hover:opacity-45 transition-opacity duration-500"
-                  />
-                )}
-                <div className="absolute inset-0 bg-gradient-to-t from-background/85 via-background/55 to-transparent" />
-                <span
-                  className="relative z-10 text-xl md:text-2xl font-semibold text-black dark:text-primary-foreground text-center tracking-wide
-                    drop-shadow-sm transition-transform duration-500 group-hover:scale-110"
-                >
-                  {project.shortTitle}
-                </span>
+      <motion.div
+        ref={ref}
+        variants={cardVariant}
+        animate={isVisible ? "visible" : "hidden"}
+        initial="hidden"
+      >
+        <Card className="group relative overflow-hidden border-border bg-card/70 dark:bg-card/40 backdrop-blur-md hover:shadow-2xl hover:shadow-primary/15 transition-all duration-300">
+          <CardContent className="p-0">
+            <div
+              className={`flex flex-col ${
+                isEven ? "md:flex-row" : "md:flex-row-reverse"
+              }`}
+            >
+              {/* Thumbnail */}
+              <div className="relative w-full md:w-[380px] lg:w-[430px] h-60 md:h-auto bg-gradient-to-br from-primary/15 via-transparent to-primary/25 p-[1px]">
+                <div className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl bg-primary/25" />
+                <div className="relative h-full w-full rounded-2xl overflow-hidden bg-card-light/40 dark:bg-muted/40 border border-border/60 shadow-sm transition-all duration-500 group-hover:shadow-xl group-hover:-translate-y-0.5 group-hover:scale-[1.02] group-hover:rotate-[0.4deg]">
+                  {project.image && (
+                    <img
+                      src={project.image}
+                      alt={project.title}
+                      className="absolute inset-0 h-full w-full object-cover opacity-25 group-hover:opacity-45 transition-opacity duration-500"
+                    />
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-r from-background/92 via-background/60 to-transparent" />
+                  <span className="relative z-10 flex h-full items-center justify-center text-xl md:text-2xl font-semibold text-black dark:text-primary-foreground text-center px-6">
+                    {project.shortTitle}
+                  </span>
+                </div>
               </div>
-            </div>
 
-            <div className="flex items-start justify-between mb-2 mt-4">
-              <CardTitle className="text-xl flex items-center gap-2">
-                <Icon className="h-5 w-5 text-primary flex-shrink-0" />
-                {project.title}
-              </CardTitle>
-              {project.status && (
-                <Badge variant="secondary" className="ml-2 flex-shrink-0">
-                  {project.status}
-                </Badge>
-              )}
-            </div>
-            <CardDescription className="text-base">
-              {project.description}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-wrap gap-2 mb-4 transition-all duration-300 opacity-90 group-hover:opacity-100 group-hover:-translate-y-0.5">
-              {project.technologies.map((tech, techIndex) => (
-                <Badge key={techIndex} variant="outline">
-                  {tech}
-                </Badge>
-              ))}
-            </div>
-            <div className="flex gap-2">
-              <DialogTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="w-full min-h-12 md:min-h-10 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:shadow-md"
-                >
-                  <Eye className="mr-2 h-3 w-3" />
-                  Show Details
-                </Button>
-              </DialogTrigger>
+              {/* Content */}
+              <div className="flex-1 p-7 md:p-9 lg:p-10">
+                <div className="flex items-start justify-between gap-3 mb-3">
+                  <div className="flex items-center gap-2">
+                    <Icon className="h-5 w-5 text-primary" />
+                    <CardTitle className="text-xl md:text-2xl">
+                      {project.title}
+                    </CardTitle>
+                  </div>
+                  {project.status && (
+                    <Badge variant="secondary" className="text-xs">
+                      {project.status}
+                    </Badge>
+                  )}
+                </div>
 
-              <Button
-                asChild
-                variant="ghost"
-                size="icon"
-                className="min-h-12 md:min-h-10 transition-transform duration-300 group-hover:-translate-y-0.5"
-              >
-                <a
-                  href={project.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="View on GitHub"
-                >
-                  <Github className="h-4 w-4" />
-                </a>
-              </Button>
+                <CardDescription className="text-base mb-4">
+                  {project.description}
+                </CardDescription>
+
+                <div className="flex flex-wrap gap-2 mb-5">
+                  {project.technologies.map((tech, i) => (
+                    <Badge key={i} variant="outline">
+                      {tech}
+                    </Badge>
+                  ))}
+                </div>
+
+                <div className="flex flex-wrap items-center gap-3">
+                  <DialogTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="px-4 h-10 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:shadow-md"
+                    >
+                      <Eye className="mr-2 h-3 w-3" />
+                      Read case study
+                    </Button>
+                  </DialogTrigger>
+                  <Button
+                    asChild
+                    variant="ghost"
+                    size="sm"
+                    className="gap-2 h-10 transition-transform duration-300 group-hover:-translate-y-0.5"
+                  >
+                    <a
+                      href={project.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Github className="h-4 w-4" />
+                      View source
+                    </a>
+                  </Button>
+                </div>
+              </div>
             </div>
           </CardContent>
         </Card>
-      </div>
+      </motion.div>
 
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="max-w-3xl">
         <DialogHeader>
           <DialogTitle className="text-2xl flex items-center gap-2">
             <Icon className="h-6 w-6 text-primary" />
@@ -327,8 +446,8 @@ const ProjectCard = ({ project, index }: { project: Project; index: number }) =>
             Technologies Used
           </h4>
           <div className="flex flex-wrap gap-2">
-            {project.technologies.map((tech, techIndex) => (
-              <Badge key={techIndex} variant="secondary" className="text-sm">
+            {project.technologies.map((tech, i) => (
+              <Badge key={i} variant="secondary" className="text-sm">
                 {tech}
               </Badge>
             ))}
@@ -352,210 +471,133 @@ const ProjectCard = ({ project, index }: { project: Project; index: number }) =>
   );
 };
 
-const Projects = () => {
+const MinorProjectCard = ({
+  project,
+  index,
+}: {
+  project: Project;
+  index: number;
+}) => {
+  const Icon = project.icon;
+  const { ref, isVisible } = useScrollAnimation();
+
   return (
-    <section
-      id="projects"
-      className="py-24 px-6 md:px-12 lg:px-20 relative overflow-hidden"
-    >
-      <div className="absolute top-40 right-20 w-96 h-96 bg-gradient-to-br from-primary/10 to-transparent rounded-full blur-3xl" />
-      <div className="absolute bottom-40 left-20 w-96 h-96 bg-gradient-to-tl from-accent/10 to-transparent rounded-full blur-3xl" />
+    <Dialog>
+      <motion.div
+        ref={ref}
+        variants={cardVariant}
+        initial="hidden"
+        animate={isVisible ? "visible" : "hidden"}
+        style={{ transitionDelay: `${index * 80}ms` }}
+      >
+        <Card className="group relative h-full overflow-hidden border-border bg-card/70 dark:bg-card/40 backdrop-blur-md hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/10 transition-all duration-300">
+          <CardHeader className="pb-3">
+            <div className="relative w-full h-32 rounded-xl bg-gradient-to-br from-primary/10 via-transparent to-primary/20 p-[1px] mb-3">
+              <div className="relative h-full w-full rounded-xl overflow-hidden bg-card-light/40 dark:bg-muted/40">
+                {project.image && (
+                  <img
+                    src={project.image}
+                    alt={project.title}
+                    className="absolute inset-0 h-full w-full object-cover opacity-18 group-hover:opacity-35 transition-opacity duration-500"
+                  />
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/60 to-transparent" />
+                <span className="relative z-10 flex h-full items-center justify-center text-[13px] md:text-sm font-semibold text-black dark:text-primary-foreground text-center px-3">
+                  {project.shortTitle}
+                </span>
+              </div>
+            </div>
+            <div className="flex items-start justify-between gap-2">
+              <CardTitle className="text-base flex items-center gap-2">
+                <Icon className="h-4 w-4 text-primary" />
+                {project.title}
+              </CardTitle>
+              {project.status && (
+                <Badge variant="secondary" className="text-[10px] px-2 py-0.5">
+                  {project.status}
+                </Badge>
+              )}
+            </div>
+          </CardHeader>
+          <CardContent className="pt-0">
+            <CardDescription className="text-xs md:text-sm mb-3 line-clamp-3">
+              {project.description}
+            </CardDescription>
+            <div className="flex flex-wrap gap-1.5 mb-3">
+              {project.technologies.map((tech, i) => (
+                <Badge key={i} variant="outline" className="text-[11px] px-2">
+                  {tech}
+                </Badge>
+              ))}
+            </div>
+            <div className="flex items-center gap-2">
+              <DialogTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex-1 h-8 text-xs px-2"
+                >
+                  <Eye className="mr-1 h-3 w-3" />
+                  Details
+                </Button>
+              </DialogTrigger>
+              <Button
+                asChild
+                size="icon"
+                variant="ghost"
+                className="h-8 w-8"
+              >
+                <a
+                  href={project.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="View on GitHub"
+                >
+                  <Github className="h-4 w-4" />
+                </a>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
 
-      <div className="container max-w-6xl mx-auto relative z-10">
-        <SectionHeading
-          icon={Rocket}
-          subtitle="A collection of projects showcasing my skills in full-stack development, AI/ML, and embedded systems"
-        >
-          My Projects
-        </SectionHeading>
-
-        {/* Major Projects */}
-        <div className="mb-16">
-          <h3 className="text-3xl md:text-4xl font-bold text-center mb-8 relative inline-block left-1/2 -translate-x-1/2">
-            Major Projects
-            <span className="absolute bottom-0 left-0 w-full h-1 bg-primary rounded-full"></span>
-          </h3>
-          <div className="space-y-8 max-w-6xl mx-auto">
-            {majorProjects.map((project, index) => {
-              const Icon = project.icon;
-              const { ref, isVisible } = useScrollAnimation();
-              const isEven = index % 2 === 0;
-
-              return (
-                <Dialog key={index}>
-                  <div ref={ref}>
-                    <Card
-                      className={`group relative overflow-hidden border-border bg-card/50 dark:bg-card/30
-                        transition-transform transition-shadow duration-300
-                        hover:-translate-y-1 hover:shadow-2xl hover:shadow-primary/10 ${
-                          isVisible
-                            ? "opacity-100 translate-x-0"
-                            : isEven
-                            ? "opacity-0 -translate-x-20"
-                            : "opacity-0 translate-x-20"
-                        }`}
-                      style={{ transitionDelay: `${index * 150}ms` }}
-                    >
-                      <CardContent className="p-0">
-                        <div
-                          className={`flex flex-col ${
-                            isEven ? "md:flex-row" : "md:flex-row-reverse"
-                          }`}
-                        >
-                          {/* Thumbnail with image + glass */}
-                          <div className="relative w-full md:w-[400px] lg:w-[450px] h-64 md:h-auto rounded-2xl bg-gradient-to-br from-primary/15 via-transparent to-primary/25 p-[1px]">
-                            <div className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl bg-primary/20" />
-                            <div
-                              className="relative flex h-full w-full items-center justify-center rounded-2xl
-                                overflow-hidden bg-card-light/40 dark:bg-muted/40
-                                backdrop-blur-md border border-border/60
-                                shadow-sm transition-all duration-500
-                                group-hover:shadow-xl group-hover:-translate-y-0.5 group-hover:scale-[1.02] group-hover:rotate-[0.5deg]"
-                            >
-                              {project.image && (
-                                <img
-                                  src={project.image}
-                                  alt={project.title}
-                                  className="absolute inset-0 h-full w-full object-cover opacity-30 group-hover:opacity-45 transition-opacity duration-500"
-                                />
-                              )}
-                              <div className="absolute inset-0 bg-gradient-to-r from-background/85 via-background/50 to-transparent" />
-                              <span
-                                className="relative z-10 text-2xl md:text-3xl font-semibold text-black dark:text-primary-foreground text-center tracking-wide
-                                  drop-shadow-sm transition-transform duration-500 group-hover:scale-110"
-                              >
-                                {project.shortTitle}
-                              </span>
-                            </div>
-                          </div>
-
-                          {/* Content */}
-                          <div className="flex-1 p-8 md:p-10 lg:p-12">
-                            <div className="flex items-start justify-between mb-2">
-                              <CardTitle className="text-xl md:text-2xl flex items-center gap-2">
-                                <Icon className="h-5 w-5 text-primary flex-shrink-0" />
-                                {project.title}
-                              </CardTitle>
-                              {project.status && (
-                                <Badge
-                                  variant="secondary"
-                                  className="ml-2 flex-shrink-0"
-                                >
-                                  {project.status}
-                                </Badge>
-                              )}
-                            </div>
-                            <CardDescription className="text-base mb-6">
-                              {project.description}
-                            </CardDescription>
-
-                            <div className="flex flex-wrap gap-2 mb-6 transition-all duration-300 opacity-90 group-hover:opacity-100 group-hover:-translate-y-0.5">
-                              {project.technologies.map((tech, techIndex) => (
-                                <Badge key={techIndex} variant="outline">
-                                  {tech}
-                                </Badge>
-                              ))}
-                            </div>
-
-                            <div className="flex gap-2">
-                              <DialogTrigger asChild>
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  className="min-h-12 md:min-h-10 px-6 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:shadow-md"
-                                >
-                                  <Eye className="mr-2 h-3 w-3" />
-                                  Show Details
-                                </Button>
-                              </DialogTrigger>
-
-                              <Button
-                                asChild
-                                variant="ghost"
-                                size="icon"
-                                className="min-h-12 md:min-h-10 transition-transform duration-300 group-hover:-translate-y-0.5"
-                              >
-                                <a
-                                  href={project.github}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  aria-label="View on GitHub"
-                                >
-                                  <Github className="h-4 w-4" />
-                                </a>
-                              </Button>
-                            </div>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-
-                  <DialogContent className="max-w-2xl">
-                    <DialogHeader>
-                      <DialogTitle className="text-2xl flex items-center gap-2">
-                        <Icon className="h-6 w-6 text-primary" />
-                        {project.title}
-                        {project.status && (
-                          <Badge variant="secondary" className="ml-2">
-                            {project.status}
-                          </Badge>
-                        )}
-                      </DialogTitle>
-                      <DialogDescription className="text-base pt-4">
-                        {project.detailedDescription}
-                      </DialogDescription>
-                    </DialogHeader>
-                    <div className="mt-4">
-                      <h4 className="font-semibold mb-3 text-sm uppercase tracking-wider text-muted-foreground">
-                        Technologies Used
-                      </h4>
-                      <div className="flex flex-wrap gap-2">
-                        {project.technologies.map((tech, techIndex) => (
-                          <Badge
-                            key={techIndex}
-                            variant="secondary"
-                            className="text-sm"
-                          >
-                            {tech}
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                    <div className="mt-6">
-                      <Button asChild variant="outline" size="sm">
-                        <a
-                          href={project.github}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-2"
-                        >
-                          <Github className="h-4 w-4" />
-                          View Source on GitHub
-                        </a>
-                      </Button>
-                    </div>
-                  </DialogContent>
-                </Dialog>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Minor Projects */}
-        <div>
-          <h3 className="text-3xl md:text-4xl font-bold text-center mb-8 relative inline-block left-1/2 -translate-x-1/2">
-            Minor Projects
-            <span className="absolute bottom-0 left-0 w-full h-1 bg-primary rounded-full"></span>
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {minorProjects.map((project, index) => (
-              <ProjectCard key={index} project={project} index={index} />
+      <DialogContent className="max-w-2xl">
+        <DialogHeader>
+          <DialogTitle className="text-2xl flex items-center gap-2">
+            <Icon className="h-6 w-6 text-primary" />
+            {project.title}
+          </DialogTitle>
+          <DialogDescription className="text-base pt-4">
+            {project.detailedDescription}
+          </DialogDescription>
+        </DialogHeader>
+        <div className="mt-4">
+          <h4 className="font-semibold mb-3 text-sm uppercase tracking-wider text-muted-foreground">
+            Technologies Used
+          </h4>
+          <div className="flex flex-wrap gap-2">
+            {project.technologies.map((tech, i) => (
+              <Badge key={i} variant="secondary" className="text-sm">
+                {tech}
+              </Badge>
             ))}
           </div>
         </div>
-      </div>
-    </section>
+        <div className="mt-6">
+          <Button asChild variant="outline" size="sm">
+            <a
+              href={project.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2"
+            >
+              <Github className="h-4 w-4" />
+              View Source on GitHub
+            </a>
+          </Button>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 };
 

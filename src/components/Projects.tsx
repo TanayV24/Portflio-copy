@@ -230,14 +230,16 @@ const staggerContainer: Variants = {
 };
 
 const cardVariant: Variants = {
-  hidden: { opacity: 0, y: 32, scale: 0.96 },
+  hidden: (custom: boolean) => ({ opacity: 0, y: 32, scale: 0.96, x: custom ? -48 : 48 }),
   visible: {
     opacity: 1,
     y: 0,
+    x: 0,
     scale: 1,
     transition: { type: "spring", stiffness: 140, damping: 18 },
   },
 };
+
 
 const Projects = () => {
   return (
@@ -264,7 +266,7 @@ const Projects = () => {
       <div className="container max-w-6xl mx-auto relative z-10">
         <SectionHeading
           icon={Rocket}
-         /* subtitle="Major case studies and supporting builds that highlight full‑stack, AI/ML and embedded work."*/
+          /* subtitle="Major case studies and supporting builds that highlight full‑stack, AI/ML and embedded work."*/
         >
           Projects
         </SectionHeading>
@@ -281,10 +283,6 @@ const Projects = () => {
             <h3 className="text-2xl md:text-3xl font-semibold">
               Major Projects
             </h3>
-            {/*<p className="text-xs md:text-sm text-muted-foreground max-w-sm text-right">
-              High‑impact projects with end‑to‑end ownership, from problem
-              framing to deployment and iteration.
-            </p>*/}
           </div>
 
           {majorProjects.map((project, index) => (
@@ -292,7 +290,7 @@ const Projects = () => {
           ))}
         </motion.div>
 
-        {/* Minor Projects */}
+        {/* Minor Projects - now using the same design as Major but two columns */}
         <motion.div
           variants={staggerContainer}
           initial="hidden"
@@ -301,14 +299,11 @@ const Projects = () => {
         >
           <div className="flex items-center justify-between gap-4 mb-6">
             <h3 className="text-2xl md:text-3xl font-semibold">Minor Projects</h3>
-            {/*<p className="text-xs md:text-sm text-muted-foreground max-w-xs text-right">
-              Smaller tools, experiments and client work that complement the
-              major projects.
-            </p>*/}
           </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {minorProjects.map((project, index) => (
-              <MinorProjectCard
+              <MinorProjectRow
                 key={project.title}
                 project={project}
                 index={index}
@@ -337,6 +332,7 @@ const MajorProjectRow = ({
       <motion.div
         ref={ref}
         variants={cardVariant}
+        custom={isEven}
         animate={isVisible ? "visible" : "hidden"}
         initial="hidden"
       >
@@ -471,7 +467,8 @@ const MajorProjectRow = ({
   );
 };
 
-const MinorProjectCard = ({
+// MinorProjectRow: same design as Major but with smaller thumbnail to fit two-per-row layout
+const MinorProjectRow = ({
   project,
   index,
 }: {
@@ -479,6 +476,7 @@ const MinorProjectCard = ({
   index: number;
 }) => {
   const Icon = project.icon;
+  const isEven = index % 2 === 0;
   const { ref, isVisible } = useScrollAnimation();
 
   return (
@@ -486,76 +484,89 @@ const MinorProjectCard = ({
       <motion.div
         ref={ref}
         variants={cardVariant}
-        initial="hidden"
+        custom={isEven}
         animate={isVisible ? "visible" : "hidden"}
-        style={{ transitionDelay: `${index * 80}ms` }}
+        initial="hidden"
       >
-        <Card className="group relative h-full overflow-hidden border-border bg-card/70 dark:bg-card/40 backdrop-blur-md hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/10 transition-all duration-300">
-          <CardHeader className="pb-3">
-            <div className="relative w-full h-32 rounded-xl bg-gradient-to-br from-primary/10 via-transparent to-primary/20 p-[1px] mb-3">
-              <div className="relative h-full w-full rounded-xl overflow-hidden bg-card-light/40 dark:bg-muted/40">
-                {project.image && (
-                  <img
-                    src={project.image}
-                    alt={project.title}
-                    className="absolute inset-0 h-full w-full object-cover opacity-18 group-hover:opacity-35 transition-opacity duration-500"
-                  />
-                )}
-                <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/60 to-transparent" />
-                <span className="relative z-10 flex h-full items-center justify-center text-[13px] md:text-sm font-semibold text-black dark:text-primary-foreground text-center px-3">
-                  {project.shortTitle}
-                </span>
+        <Card className="group relative h-full overflow-hidden border-border bg-card/70 dark:bg-card/40 backdrop-blur-md hover:shadow-xl transition-all duration-300">
+          <CardContent className="p-0">
+            <div
+              className={`flex flex-col ${isEven ? "md:flex-row" : "md:flex-row-reverse"} items-stretch gap-0`}
+            >
+              {/* Smaller thumbnail so two cards fit side-by-side */}
+              <div className="relative w-full md:w-[220px] lg:w-[240px] h-44 md:h-auto bg-gradient-to-br from-primary/15 via-transparent to-primary/25 p-[1px]">
+                <div className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl bg-primary/25" />
+                <div className="relative h-full w-full rounded-2xl overflow-hidden bg-card-light/40 dark:bg-muted/40 border border-border/60 shadow-sm transition-all duration-500 group-hover:shadow-lg group-hover:scale-[1.015]">
+                  {project.image && (
+                    <img
+                      src={project.image}
+                      alt={project.title}
+                      className="absolute inset-0 h-full w-full object-cover opacity-20 group-hover:opacity-35 transition-opacity duration-500"
+                    />
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-r from-background/92 via-background/60 to-transparent" />
+                  <span className="relative z-10 flex h-full items-center justify-center text-sm md:text-base font-semibold text-black dark:text-primary-foreground text-center px-4">
+                    {project.shortTitle}
+                  </span>
+                </div>
               </div>
-            </div>
-            <div className="flex items-start justify-between gap-2">
-              <CardTitle className="text-base flex items-center gap-2">
-                <Icon className="h-4 w-4 text-primary" />
-                {project.title}
-              </CardTitle>
-              {project.status && (
-                <Badge variant="secondary" className="text-[10px] px-2 py-0.5">
-                  {project.status}
-                </Badge>
-              )}
-            </div>
-          </CardHeader>
-          <CardContent className="pt-0">
-            <CardDescription className="text-xs md:text-sm mb-3 line-clamp-3">
-              {project.description}
-            </CardDescription>
-            <div className="flex flex-wrap gap-1.5 mb-3">
-              {project.technologies.map((tech, i) => (
-                <Badge key={i} variant="outline" className="text-[11px] px-2">
-                  {tech}
-                </Badge>
-              ))}
-            </div>
-            <div className="flex items-center gap-2">
-              <DialogTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="flex-1 h-8 text-xs px-2"
-                >
-                  <Eye className="mr-1 h-3 w-3" />
-                  Details
-                </Button>
-              </DialogTrigger>
-              <Button
-                asChild
-                size="icon"
-                variant="ghost"
-                className="h-8 w-8"
-              >
-                <a
-                  href={project.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="View on GitHub"
-                >
-                  <Github className="h-4 w-4" />
-                </a>
-              </Button>
+
+              {/* Content */}
+              <div className="flex-1 p-4 md:p-6 lg:p-7">
+                <div className="flex items-start justify-between gap-3 mb-2">
+                  <div className="flex items-center gap-2">
+                    <Icon className="h-4 w-4 text-primary" />
+                    <CardTitle className="text-base">
+                      {project.title}
+                    </CardTitle>
+                  </div>
+                  {project.status && (
+                    <Badge variant="secondary" className="text-xs">
+                      {project.status}
+                    </Badge>
+                  )}
+                </div>
+
+                <CardDescription className="text-sm mb-3 line-clamp-3">
+                  {project.description}
+                </CardDescription>
+
+                <div className="flex flex-wrap gap-2 mb-3">
+                  {project.technologies.map((tech, i) => (
+                    <Badge key={i} variant="outline" className="text-[11px] px-2">
+                      {tech}
+                    </Badge>
+                  ))}
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <DialogTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex-1 h-9 text-xs px-2"
+                    >
+                      <Eye className="mr-1 h-3 w-3" />
+                      Details
+                    </Button>
+                  </DialogTrigger>
+                  <Button
+                    asChild
+                    size="icon"
+                    variant="ghost"
+                    className="h-9 w-9"
+                  >
+                    <a
+                      href={project.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="View on GitHub"
+                    >
+                      <Github className="h-4 w-4" />
+                    </a>
+                  </Button>
+                </div>
+              </div>
             </div>
           </CardContent>
         </Card>

@@ -42,74 +42,83 @@ const skills = [
 ];
 
 const Skills = () => {
-  const [isVisible, setIsVisible] = useState(false);
-  const [scrollY, setScrollY] = useState(0);
   const sectionRef = useRef<HTMLDivElement>(null);
+  const [startSequence, setStartSequence] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(0);
 
+  // observe enter / exit of the section
   useEffect(() => {
-    const handleScroll = () => {
-      if (sectionRef.current) {
-        const rect = sectionRef.current.getBoundingClientRect();
-        const scrollProgress = (window.innerHeight - rect.top) / window.innerHeight;
-        setScrollY(scrollProgress * 50);
-      }
-    };
-
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setIsVisible(true);
+          // restart sequence when section comes back into view
+          setVisibleCount(0);
+          setStartSequence(true);
+        } else {
+          // when section leaves viewport, stop and reset
+          setStartSequence(false);
+          setVisibleCount(0);
         }
       },
-      { threshold: 0.1 }
+      {
+        threshold: 0.2, // visible when ~20% of section is in view
+      }
     );
 
     if (sectionRef.current) {
       observer.observe(sectionRef.current);
     }
 
-    window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
-      }
-      window.removeEventListener("scroll", handleScroll);
-    };
+    return () => observer.disconnect();
   }, []);
 
+  // drive the one‑after‑another animation
+  useEffect(() => {
+    if (!startSequence) return;
+    if (visibleCount >= skills.length) return;
+
+    const interval = setInterval(() => {
+      setVisibleCount((prev) => {
+        if (prev >= skills.length) {
+          clearInterval(interval);
+          return prev;
+        }
+        return prev + 1;
+      });
+    }, 80); // delay between each skill
+
+    return () => clearInterval(interval);
+  }, [startSequence, visibleCount]);
+
   return (
-    <section id="skills" className="py-24 px-6 md:px-12 lg:px-20 bg-section-bg relative overflow-hidden" ref={sectionRef}>
-      {/* Parallax background */}
-      <div 
-        className="absolute top-20 right-10 w-96 h-96 bg-gradient-to-br from-primary/10 to-transparent rounded-full blur-3xl"
-        style={{ transform: `translateY(${scrollY}px)` }}
-      />
-      <div 
-        className="absolute bottom-20 left-10 w-96 h-96 bg-gradient-to-tl from-accent/10 to-transparent rounded-full blur-3xl"
-        style={{ transform: `translateY(${-scrollY}px)` }}
-      />
-      
+    <section
+      id="skills"
+      ref={sectionRef}
+      className="py-24 px-6 md:px-12 lg:px-20 bg-section-bg relative overflow-hidden"
+    >
+      {/* Background glows */}
+      <div className="pointer-events-none absolute top-20 right-10 w-96 h-96 bg-gradient-to-br from-primary/10 to-transparent rounded-full blur-3xl" />
+      <div className="pointer-events-none absolute bottom-20 left-10 w-96 h-96 bg-gradient-to-tl from-accent/10 to-transparent rounded-full blur-3xl" />
+
       <div className="container max-w-6xl mx-auto relative z-10">
         <SectionHeading icon={Code2}>My Skills</SectionHeading>
 
-        <div
-          className={`flex flex-wrap justify-center gap-4 transition-all duration-700 ${
-            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-          }`}
-        >
-          {skills.map((skill, index) => (
-            <Badge
-              key={index}
-              variant="secondary"
-              className="text-base py-3 px-6 hover:bg-primary hover:text-primary-foreground transition-all cursor-default hover:scale-105"
-              style={{
-                transitionDelay: `${index * 50}ms`,
-              }}
-            >
-              {skill}
-            </Badge>
-          ))}
+        <div className="flex flex-wrap justify-center gap-4">
+          {skills.map((skill, index) => {
+            const isVisible = index < visibleCount;
+
+            return (
+              <Badge
+                key={skill}
+                variant="secondary"
+                className={`text-base py-3 px-6 cursor-default transition-all duration-300
+                  ${isVisible ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-3 scale-95"}
+                  hover:bg-primary hover:text-primary-foreground hover:scale-105`}
+              >
+                {skill}
+              </Badge>
+            );
+          })}
         </div>
       </div>
     </section>

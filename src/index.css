@@ -1,7 +1,6 @@
 @import url('https://api.fontshare.com/v2/css?f[]=tanker@400&display=swap');
 @import url("https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700&display=swap");
 
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -54,64 +53,58 @@ All colors MUST be HSL.
     --transition-spring: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
   .dark {
-    --background: 220 30% 8%;
-    --foreground: 220 20% 95%;
+    --background: 0 0% 7%;
+    --foreground: 0 0% 95%;
 
-    --card: 220 25% 12%;
-    --card-foreground: 220 20% 95%;
+    --card: 0 0% 10%;
+    --card-foreground: 0 0% 95%;
 
-    --popover: 220 25% 12%;
-    --popover-foreground: 220 20% 95%;
+    --popover: 0 0% 10%;
+    --popover-foreground: 0 0% 95%;
 
-    --primary: 217 91% 60%;
+    --primary: 0 0% 20%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 25% 15%;
-    --secondary-foreground: 220 20% 95%;
+    --secondary: 0 0% 13%;
+    --secondary-foreground: 0 0% 95%;
 
-    --muted: 220 20% 18%;
-    --muted-foreground: 220 15% 60%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 60%;
 
-    --accent: 217 91% 60%;
+    --accent: 0 0% 18%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 62.8% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 20% 18%;
-    --input: 220 20% 18%;
-    --ring: 217 91% 60%;
+    --border: 0 0% 18%;
+    --input: 0 0% 18%;
+    --ring: 0 0% 50%;
 
-    --hero-accent: 217 91% 60%;
-    --text-primary: 220 20% 95%;
-    --text-secondary: 220 15% 60%;
-    --card-bg: 220 25% 12%;
-    --section-bg: 220 30% 8%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
+    --hero-accent: 0 0% 25%;
+    --text-primary: 0 0% 95%;
+    --text-secondary: 0 0% 60%;
+    --card-bg: 0 0% 10%;
+    --section-bg: 0 0% 7%;
+    
+    --sidebar-background: 0 0% 8%;
+    --sidebar-foreground: 0 0% 95%;
+    --sidebar-primary: 0 0% 15%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-accent: 0 0% 12%;
+    --sidebar-accent-foreground: 0 0% 95%;
+    --sidebar-border: 0 0% 18%;
+    --sidebar-ring: 0 0% 50%;
   }
 }
 
@@ -120,13 +113,10 @@ All colors MUST be HSL.
     @apply border-border;
   }
 
-body {
-  @apply bg-background text-foreground;
-  font-family: 'Unbounded', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-}
-
-
-
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Unbounded', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
 
   html {
     scroll-behavior: smooth;
@@ -208,5 +198,77 @@ body {
   to {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+/* transitions + helpers for the per-letter morph */
+.name-letter{
+  display:inline-block;
+  transition: all 420ms cubic-bezier(.22,1,.36,1);
+  will-change: transform, font-family, font-weight, font-size, color;
+  line-height:1;
+  white-space:pre;
+}
+.static-letter{
+  color:var(--foreground,#fff);
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto, "Helvetica Neue",Arial;
+}
+.animated-letter{ display:inline-block; }
+.name-letter {
+  display: inline-block;
+  transition: all 420ms cubic-bezier(.22,1,.36,1);
+  will-change: transform, font-family, font-weight, font-size, color;
+  line-height: 1;
+  white-space: pre;
+}
+.static-letter {
+  color: var(--foreground, #0f172a);
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+.animated-letter { display: inline-block; }
+
+/* hero helpers */
+@keyframes floatY {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+  100% { transform: translateY(0px); }
+}
+
+/* subtle gradient movement if you want it */
+@keyframes slowGradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-gradient-slow {
+  background: linear-gradient(90deg, rgba(99,102,241,0.05), rgba(236,72,153,0.03), rgba(34,197,94,0.03));
+  background-size: 300% 300%;
+  animation: slowGradient 20s ease-in-out infinite;
+}
+
+/* name emphasis */
+.hero-name-word {
+  display: inline-block;
+  transition: transform 360ms cubic-bezier(.22,1,.36,1), color 360ms;
+}
+
+/* CTA helpers */
+.hero-cta {
+  transition: transform 220ms ease, box-shadow 220ms ease;
+}
+.hero-cta:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 14px 30px rgba(2,6,23,0.28);
+}
+
+/* accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .animate-gradient-slow,
+  .float-anim,
+  .hero-name-word,
+  .hero-cta {
+    animation: none !important;
+    transition: none !important;
   }
 }

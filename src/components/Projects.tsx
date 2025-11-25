@@ -2,7 +2,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -16,24 +15,20 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
-  Code2,
   Brain,
-  Briefcase,
-  Smartphone,
   Database,
-  Cpu,
+  Building2,
+  BotMessageSquare,
   Server,
+  ShoppingBag,
   Sun,
+  User,
+  FileText,
+  Bot,
   Eye,
   Rocket,
   Github,
   GraduationCap,
-  BotMessageSquare,
-  ShoppingBag,
-  User,
-  FileText,
-  Bot,
-  Building2,
 } from "lucide-react";
 import { motion, Variants } from "framer-motion";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
@@ -224,33 +219,45 @@ const Projects = () => {
   return (
     <motion.section
       id="projects"
-      className="py-24 px-6 md:px-12 lg:px-20 relative overflow-hidden"
+      className="relative min-h-screen py-20 px-6 md:px-12 lg:px-20 bg-background overflow-hidden transition-colors duration-300"
       variants={sectionVariants}
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, margin: "-120px" }}
     >
-      {/* animated background blobs */}
-      <motion.div
-        className="pointer-events-none absolute -top-24 right-0 w-80 h-80 rounded-full bg-primary/10 blur-3xl"
-        animate={{ y: [0, -18, 0] }}
-        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div
-        className="pointer-events-none absolute bottom-0 -left-10 w-96 h-96 rounded-full bg-accent/10 blur-3xl"
-        animate={{ y: [0, 22, 0] }}
-        transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
-      />
+      {/* Background matching Hero/About */}
+      <div className="absolute inset-0">
+        <div 
+          className="absolute inset-0 opacity-5 dark:opacity-10"
+          style={{
+            backgroundImage: `linear-gradient(rgba(120, 119, 198, 0.2) 1px, transparent 1px),
+                             linear-gradient(90deg, rgba(120, 119, 198, 0.2) 1px, transparent 1px)`,
+            backgroundSize: '60px 60px',
+          }}
+        />
+        <motion.div
+          className="absolute top-20 right-10 w-96 h-96 bg-gradient-to-br from-primary/20 via-purple-500/10 to-transparent rounded-full blur-3xl"
+          style={{ opacity: 0.4 }}
+          animate={{ y: [0, -18, 0] }}
+          transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div
+          className="absolute bottom-20 left-10 w-96 h-96 bg-gradient-to-tl from-purple-500/20 via-primary/10 to-transparent rounded-full blur-3xl"
+          style={{ opacity: 0.4 }}
+          animate={{ y: [0, 22, 0] }}
+          transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
+        />
+      </div>
 
       <div className="container max-w-6xl mx-auto relative z-10">
-        {/* Main Section Heading */}
-        <div className="mb-16 text-center">
-          <div className="inline-flex items-center gap-5 md:gap-6">
-            <Rocket className="h-12 w-12 md:h-14 md:w-14 text-foreground dark:text-foreground flex-shrink-0" />
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground dark:text-foreground">
-              Projects
-            </h2>
+        {/* Main Section Heading - matching About style */}
+        <div className="mb-16">
+          <div className="inline-flex items-center gap-3 mb-6 px-6 py-3 rounded-full bg-primary/10 border border-primary/20 backdrop-blur-sm">
+            <Rocket className="w-6 h-6 text-primary dark:text-white" />
+            <span className="text-base font-semibold text-primary dark:text-white uppercase tracking-wider">Projects</span>
           </div>
+          
+          <div className="w-24 h-1 bg-gradient-to-r from-primary via-purple-500 to-transparent rounded-full" />
         </div>
 
         {/* Major Projects */}
@@ -262,7 +269,7 @@ const Projects = () => {
           viewport={{ once: true, margin: "-100px" }}
         >
           <div className="mb-6">
-            <h3 className="text-3xl md:text-4xl font-semibold text-foreground dark:text-foreground">
+            <h3 className="text-2xl md:text-3xl font-semibold text-foreground">
               Major Projects
             </h3>
           </div>
@@ -280,7 +287,7 @@ const Projects = () => {
           viewport={{ once: true, margin: "-80px" }}
         >
           <div className="mb-6">
-            <h3 className="text-3xl md:text-4xl font-semibold text-foreground dark:text-foreground">
+            <h3 className="text-2xl md:text-3xl font-semibold text-foreground">
               Minor Projects
             </h3>
           </div>
@@ -296,6 +303,9 @@ const Projects = () => {
           </div>
         </motion.div>
       </div>
+
+      {/* Bottom Separator matching Hero/About */}
+      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-border to-transparent transition-colors duration-300" />
     </motion.section>
   );
 };
@@ -333,19 +343,17 @@ const MajorProjectRow = ({
                 <div className="relative h-full w-full rounded-2xl overflow-hidden bg-muted/30 dark:bg-muted/40 border border-border/60 shadow-sm transition-all duration-500 group-hover:shadow-xl">
                   <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/70 to-transparent" />
                   
-                  {/* Icon - always visible but changes opacity */}
                   <div className="absolute inset-0 flex items-center justify-center opacity-15 group-hover:opacity-100 transition-opacity duration-300 z-10">
                     <Icon className="h-24 w-24 md:h-32 md:w-32 text-foreground dark:text-primary" />
                   </div>
                   
-                  {/* Text - visible by default, fades on hover */}
                   <span className="relative z-20 flex h-full items-center justify-center text-xl md:text-2xl font-semibold text-foreground dark:text-primary-foreground text-center px-6 opacity-100 group-hover:opacity-0 transition-opacity duration-300">
                     {project.shortTitle}
                   </span>
                 </div>
               </div>
 
-              {/* Content - BOLD ON HOVER */}
+              {/* Content */}
               <div className="flex-1 p-7 md:p-9 lg:p-10 group-hover:font-semibold transition-all duration-300">
                 <div className="flex items-start justify-between gap-3 mb-3">
                   <div className="flex items-center gap-2">
@@ -476,25 +484,21 @@ const MinorProjectRow = ({
             <div
               className={`flex flex-col ${isEven ? "md:flex-row" : "md:flex-row-reverse"} items-stretch gap-0 h-full`}
             >
-              {/* Icon Thumbnail - FILLS FULL HEIGHT */}
               <div className="relative w-full md:w-[200px] lg:w-[220px] h-44 md:h-full bg-gradient-to-br from-foreground/5 via-transparent to-foreground/10 dark:from-primary/15 dark:via-transparent dark:to-primary/25 p-[1px] flex-shrink-0">
                 <div className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl bg-foreground/15 dark:bg-primary/25" />
                 <div className="relative h-full w-full rounded-2xl overflow-hidden bg-muted/30 dark:bg-muted/40 border border-border/60 shadow-sm transition-all duration-500 group-hover:shadow-lg">
                   <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/70 to-transparent" />
                   
-                  {/* Icon - always visible but changes opacity */}
                   <div className="absolute inset-0 flex items-center justify-center opacity-15 group-hover:opacity-100 transition-opacity duration-300 z-10">
                     <Icon className="h-16 w-16 md:h-20 md:w-20 text-foreground dark:text-primary" />
                   </div>
                   
-                  {/* Text - visible by default, fades on hover */}
                   <span className="relative z-20 flex h-full items-center justify-center text-sm md:text-base font-semibold text-foreground dark:text-primary-foreground text-center px-4 opacity-100 group-hover:opacity-0 transition-opacity duration-300">
                     {project.shortTitle}
                   </span>
                 </div>
               </div>
 
-              {/* Content - BOLD ON HOVER */}
               <div className="flex-1 p-4 md:p-6 lg:p-7 group-hover:font-semibold transition-all duration-300">
                 <div className="flex items-start justify-between gap-3 mb-2">
                   <div className="flex items-center gap-2">

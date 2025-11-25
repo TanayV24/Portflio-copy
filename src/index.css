@@ -1,14 +1,11 @@
-@import url('https://api.fontshare.com/v2/css?f[]=tanker@400&display=swap');
-@import url("https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=DM+Sans:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
-
+/* Original color scheme preserved */
 @layer base {
   :root {
     --background: 220 25% 97%;
@@ -41,7 +38,7 @@ All colors MUST be HSL.
 
     --radius: 0.75rem;
 
-    /* Custom portfolio colors */
+    /* Custom portfolio colors - ORIGINAL */
     --hero-accent: 217 91% 60%;
     --text-primary: 220 30% 15%;
     --text-secondary: 220 15% 45%;
@@ -115,11 +112,55 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'Unbounded', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Vintage Typography with original colors */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+  }
+
+  h1 {
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    font-weight: 900;
+    letter-spacing: -0.02em;
+  }
+
+  h2 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 700;
+  }
+
+  h3 {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 600;
+  }
+
+  p {
+    font-family: 'DM Sans', sans-serif;
+    line-height: 1.7;
+    letter-spacing: 0.01em;
   }
 
   html {
     scroll-behavior: smooth;
+  }
+
+  /* Vintage serif for special elements */
+  .font-vintage {
+    font-family: 'Libre Baskerville', Georgia, serif;
+    font-weight: 400;
+    font-style: italic;
+  }
+
+  /* Playfair for headings */
+  .font-playfair {
+    font-family: 'Playfair Display', Georgia, serif;
   }
 
   @font-face {
@@ -165,6 +206,38 @@ All colors MUST be HSL.
   .animate-page-enter {
     animation: pageEnter 0.6s ease-out;
   }
+
+  /* Vintage decorative elements */
+  .vintage-ornament {
+    position: relative;
+    display: inline-block;
+  }
+
+  .vintage-ornament::before,
+  .vintage-ornament::after {
+    content: '❦';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: hsl(var(--primary));
+    font-size: 1.5rem;
+    opacity: 0.4;
+  }
+
+  .vintage-ornament::before {
+    left: -2rem;
+  }
+
+  .vintage-ornament::after {
+    right: -2rem;
+  }
+
+  /* Elegant serif emphasis */
+  .text-serif-emphasis {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 600;
+    font-style: italic;
+  }
 }
 
 @keyframes fadeInUp {
@@ -201,40 +274,34 @@ All colors MUST be HSL.
   }
 }
 
-/* transitions + helpers for the per-letter morph */
-.name-letter{
-  display:inline-block;
-  transition: all 420ms cubic-bezier(.22,1,.36,1);
-  will-change: transform, font-family, font-weight, font-size, color;
-  line-height:1;
-  white-space:pre;
-}
-.static-letter{
-  color:var(--foreground,#fff);
-  font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto, "Helvetica Neue",Arial;
-}
-.animated-letter{ display:inline-block; }
+/* Vintage-inspired name animation */
 .name-letter {
   display: inline-block;
-  transition: all 420ms cubic-bezier(.22,1,.36,1);
+  transition: all 420ms cubic-bezier(.22, 1, .36, 1);
   will-change: transform, font-family, font-weight, font-size, color;
   line-height: 1;
   white-space: pre;
+  font-family: 'Playfair Display', Georgia, serif;
 }
+
 .static-letter {
   color: var(--foreground, #0f172a);
-  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 700;
 }
-.animated-letter { display: inline-block; }
 
-/* hero helpers */
+.animated-letter { 
+  display: inline-block;
+  font-family: 'Playfair Display', Georgia, serif;
+}
+
+/* Hero helpers with vintage fonts */
 @keyframes floatY {
   0% { transform: translateY(0px); }
   50% { transform: translateY(-6px); }
   100% { transform: translateY(0px); }
 }
 
-/* subtle gradient movement if you want it */
 @keyframes slowGradient {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
@@ -247,22 +314,35 @@ All colors MUST be HSL.
   animation: slowGradient 20s ease-in-out infinite;
 }
 
-/* name emphasis */
+/* Vintage-styled name */
 .hero-name-word {
   display: inline-block;
-  transition: transform 360ms cubic-bezier(.22,1,.36,1), color 360ms;
+  transition: transform 360ms cubic-bezier(.22, 1, .36, 1), color 360ms;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 900;
+  letter-spacing: -0.02em;
 }
 
-/* CTA helpers */
+.hero-name-word:hover {
+  transform: translateY(-4px) scale(1.05);
+}
+
+/* CTA with vintage touch */
 .hero-cta {
   transition: transform 220ms ease, box-shadow 220ms ease;
-}
-.hero-cta:hover {
-  transform: translateY(-4px) scale(1.02);
-  box-shadow: 0 14px 30px rgba(2,6,23,0.28);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-size: 0.875rem;
 }
 
-/* accessibility */
+.hero-cta:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 14px 30px rgba(2, 6, 23, 0.28);
+}
+
+/* Accessibility */
 @media (prefers-reduced-motion: reduce) {
   .animate-gradient-slow,
   .float-anim,

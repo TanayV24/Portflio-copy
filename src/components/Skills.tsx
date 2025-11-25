@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import { Badge } from "@/components/ui/badge";
-import SectionHeading from "./SectionHeading";
 import { Code2 } from "lucide-react";
 
 const skills = [
@@ -51,17 +50,15 @@ const Skills = () => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          // restart sequence when section comes back into view
           setVisibleCount(0);
           setStartSequence(true);
         } else {
-          // when section leaves viewport, stop and reset
           setStartSequence(false);
           setVisibleCount(0);
         }
       },
       {
-        threshold: 0.2, // visible when ~20% of section is in view
+        threshold: 0.2,
       }
     );
 
@@ -85,7 +82,7 @@ const Skills = () => {
         }
         return prev + 1;
       });
-    }, 80); // delay between each skill
+    }, 80);
 
     return () => clearInterval(interval);
   }, [startSequence, visibleCount]);
@@ -94,16 +91,41 @@ const Skills = () => {
     <section
       id="skills"
       ref={sectionRef}
-      className="py-24 px-6 md:px-12 lg:px-20 bg-section-bg relative overflow-hidden"
+      className="relative min-h-screen flex items-center justify-center py-20 px-6 md:px-12 lg:px-20 bg-background overflow-hidden transition-colors duration-300"
     >
-      {/* Background glows */}
-      <div className="pointer-events-none absolute top-20 right-10 w-96 h-96 bg-gradient-to-br from-primary/10 to-transparent rounded-full blur-3xl" />
-      <div className="pointer-events-none absolute bottom-20 left-10 w-96 h-96 bg-gradient-to-tl from-accent/10 to-transparent rounded-full blur-3xl" />
+      {/* Background matching other sections */}
+      <div className="absolute inset-0">
+        <div 
+          className="absolute inset-0 opacity-5 dark:opacity-10"
+          style={{
+            backgroundImage: `linear-gradient(rgba(120, 119, 198, 0.2) 1px, transparent 1px),
+                             linear-gradient(90deg, rgba(120, 119, 198, 0.2) 1px, transparent 1px)`,
+            backgroundSize: '60px 60px',
+          }}
+        />
+        <div 
+          className="absolute top-20 right-10 w-96 h-96 bg-gradient-to-br from-primary/20 via-purple-500/10 to-transparent rounded-full blur-3xl"
+          style={{ opacity: 0.4 }}
+        />
+        <div 
+          className="absolute bottom-20 left-10 w-96 h-96 bg-gradient-to-tl from-purple-500/20 via-primary/10 to-transparent rounded-full blur-3xl"
+          style={{ opacity: 0.4 }}
+        />
+      </div>
 
       <div className="container max-w-6xl mx-auto relative z-10">
-        <SectionHeading icon={Code2}>My Skills</SectionHeading>
+        {/* Header matching About/Projects style */}
+        <div className="mb-16">
+          <div className="inline-flex items-center gap-3 mb-6 px-6 py-3 rounded-full bg-primary/10 border border-primary/20 backdrop-blur-sm">
+            <Code2 className="w-6 h-6 text-primary dark:text-white" />
+            <span className="text-base font-semibold text-primary dark:text-white uppercase tracking-wider">My Skills</span>
+          </div>
+          
+          <div className="w-24 h-1 bg-gradient-to-r from-primary via-purple-500 to-transparent rounded-full" />
+        </div>
 
-        <div className="flex flex-wrap justify-center gap-4">
+        {/* Skills Grid */}
+        <div className="flex flex-wrap justify-center gap-3 md:gap-4">
           {skills.map((skill, index) => {
             const isVisible = index < visibleCount;
 
@@ -111,7 +133,7 @@ const Skills = () => {
               <Badge
                 key={skill}
                 variant="secondary"
-                className={`text-base py-3 px-6 cursor-default transition-all duration-300
+                className={`text-sm md:text-base py-2 md:py-3 px-4 md:px-6 cursor-default transition-all duration-300
                   ${isVisible ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-3 scale-95"}
                   hover:bg-primary hover:text-primary-foreground hover:scale-105`}
               >
@@ -121,6 +143,9 @@ const Skills = () => {
           })}
         </div>
       </div>
+
+      {/* Bottom Separator matching other sections */}
+      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-border to-transparent transition-colors duration-300" />
     </section>
   );
 };

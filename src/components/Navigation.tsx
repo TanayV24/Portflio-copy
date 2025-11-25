@@ -39,15 +39,11 @@ const Navigation = () => {
   const navItems = ["Home", "About", "Projects", "Skills", "Experience", "Contact"];
 
   return (
-    <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? "bg-background/95 shadow-md" : "bg-background"
-      }`}
-    >
-      <div className="container mx-auto px-6 py-4">
-        {/* Desktop Navigation */}
-        <div className="hidden lg:flex justify-center">
-          <div className="flex items-center gap-2 bg-card/60 backdrop-blur-md rounded-full px-3 py-2 shadow-lg border border-border/30">
+    <nav className="fixed top-6 left-0 right-0 z-50 pointer-events-none">
+      <div className="container mx-auto px-6 flex justify-center">
+        {/* Desktop Navigation - Floating Pill */}
+        <div className="hidden lg:block pointer-events-auto">
+          <div className="flex items-center gap-2 bg-card/80 backdrop-blur-md rounded-full px-3 py-2 shadow-lg border border-border/30">
             {navItems.map((item) => (
               <Button
                 key={item}
@@ -66,40 +62,42 @@ const Navigation = () => {
           </div>
         </div>
 
-        {/* Mobile Navigation */}
-        <div className="lg:hidden flex items-center justify-between">
-          <span className="text-lg font-bold text-primary">Tanay Vakharia</span>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="rounded-full"
-          >
-            {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </Button>
-        </div>
-
-        {/* Mobile Menu */}
-        {isMobileMenuOpen && (
-          <div className="lg:hidden mt-4 bg-card rounded-2xl p-4 shadow-lg border border-border">
-            <div className="flex flex-col gap-3">
-              {navItems.map((item) => (
-                <Button
-                  key={item}
-                  variant="ghost"
-                  onClick={() => scrollToSection(item.toLowerCase())}
-                  className={`w-full justify-start rounded-lg min-h-12 ${
-                    activeSection === item.toLowerCase()
-                      ? "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground"
-                      : ""
-                  }`}
-                >
-                  {item}
-                </Button>
-              ))}
-            </div>
+        {/* Mobile Navigation - Floating */}
+        <div className="lg:hidden w-full pointer-events-auto">
+          <div className="flex items-center justify-between bg-card/80 backdrop-blur-md rounded-full px-5 py-3 shadow-lg border border-border/30">
+            <span className="text-lg font-bold text-primary">Tanay Vakharia</span>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="rounded-full"
+            >
+              {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </Button>
           </div>
-        )}
+
+          {/* Mobile Menu Dropdown */}
+          {isMobileMenuOpen && (
+            <div className="mt-3 bg-card/95 backdrop-blur-md rounded-2xl p-4 shadow-lg border border-border/30">
+              <div className="flex flex-col gap-2">
+                {navItems.map((item) => (
+                  <Button
+                    key={item}
+                    variant="ghost"
+                    onClick={() => scrollToSection(item.toLowerCase())}
+                    className={`w-full justify-start rounded-lg min-h-12 ${
+                      activeSection === item.toLowerCase()
+                        ? "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground"
+                        : ""
+                    }`}
+                  >
+                    {item}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </nav>
   );

@@ -22,17 +22,57 @@ You may optionally extend or customize the stack as needed (e.g. add more stylin
 
 ## 📂 Project Structure
 
-```
-/
-├── public/              # Static files & assets (images, favicon, etc.)
-├── src/                 # Source code (React components, pages, etc.)
-│   ├── Projects.tsx     # Example page/component listing your projects
-│   └── …                # Other components, pages, assets, styles
-├── index.html           # Entry HTML file
-├── package.json         # Dependencies & scripts
-├── vite.config.ts       # Vite configuration
-├── tailwind.config.ts   # Tailwind configuration
-└── README.md            # ← ← ←  This file
+Tanay-Portfolio/
+├── index.html                
+├── package.json              
+├── package-lock.json         
+├── bun.lockb                  
+├── tsconfig.json              
+├── tsconfig.app.json        
+├── tsconfig.node.json        
+├── tailwind.config.ts        
+├── postcss.config.js        
+├── vite.config.ts           
+├── eslint.config.js          
+├── components.json          
+├── .gitignore                 
+│
+├── public/                    
+│   ├── assets/               
+│   │   ├── Skills/            
+│   │   ├── app/               
+│   │   └── projects/         
+│   └── next.svg
+│
+└── src/
+    ├── assets/               
+    │   └── projects/         
+    │
+    ├── components/            
+    │   ├── ui/                
+    │   ├── Hero.tsx
+    │   ├── NavBar.tsx
+    │   ├── Work.tsx
+    │   ├── Skills.tsx
+    │   ├── About.tsx
+    │   └── Footer.tsx
+    │
+    ├── hooks/                 
+    │   ├── use-mobile.tsx
+    │   ├── use-toast.ts
+    │   └── useScrollAnimation.tsx
+    │
+    ├── lib/                   
+    │   └── utils.ts
+    │
+    ├── pages/                
+    │   ├── Index.tsx          
+    │   └── NotFound.tsx      
+    │
+    ├── App.tsx                
+    ├── main.tsx                            
+    └── App.css                
+
 ```
 
 *(If your structure differs, feel free to adapt this section accordingly.)*

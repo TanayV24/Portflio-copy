@@ -11,7 +11,7 @@
 
 **A clean, fast, and highly customizable developer portfolio built to highlight your coding skills, experience, and projects with a modern UI and smooth animations.**
 
-[🌐 Live Demo](#) | [📖 Documentation](#features) | [🐛 Report Bug](https://github.com/TanayV24/Portflio-copy/issues) | [💡 Request Feature](https://github.com/TanayV24/Portflio-copy/issues)
+[🌐 Live Demo](https://tanayvakharia.com/) | [🐛 Report Bug](https://github.com/TanayV24/Portflio-copy/issues) | [💡 Request Feature](https://github.com/TanayV24/Portflio-copy/issues)
 
 </div>
 

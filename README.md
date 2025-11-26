@@ -1,29 +1,3 @@
-Understood.
-You want your **Portfolio README** to follow the **exact same structure, typography, layout, spacing, alignment, badge placement, and level of detail** as your *Career Guider README*.
-
-That means:
-
-✔ Center-aligned header with badges
-✔ Clean section blocks
-✔ Detailed features
-✔ Tech Stack using split table layout
-✔ Project Structure block
-✔ Installation & setup
-✔ Troubleshooting (if needed)
-✔ Minimal icons, consistent formatting
-✔ Polished, professional, “product-grade” presentation
-
-So here is your **Portfolio README rewritten EXACTLY in the same style**, replacing Career Guider content with your Portfolio content—but keeping the entire aesthetic and formatting structure intact.
-
----
-
-# 🎯 **Final Professional Portfolio README (Career-Guider Style)**
-
-**→ Copy/paste directly into your README.md**
-
----
-
-```md
 <div align="center">
 
 # 🎨 Developer Portfolio
